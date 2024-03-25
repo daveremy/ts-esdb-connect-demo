@@ -1,0 +1,36 @@
+{
+  "name": "esdb-connect-demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm run watch-server\" \"npm run watch-client\" \"npm run watch-static\"",
+    "watch-server": "nodemon --watch src/server -e ts --exec 'ts-node' src/server/app.ts --project tsconfig.server.json",
+    "watch-client": "tsc -w --project tsconfig.client.json",
+    "build-client": "tsc --project tsconfig.client.json",
+    "copy-static": "cp -r src/client/public/* dist/client/",
+    "watch-static": "nodemon --watch src/client/public -e html,css --exec 'npm run copy-static'",
+    "build-server": "tsc --project tsconfig.server.json",
+    "build": "npm run build-server && npm run build-client && npm run copy-static",
+    "serve": "node dist/server/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "@types/socket.io-client": "^3.0.0",
+    "chokidar-cli": "^3.0.0",
+    "concurrently": "^8.2.2",
+    "nodemon": "^3.1.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.3"
+  },
+  "dependencies": {
+    "@types/socket.io": "^3.0.2",
+    "express": "^4.19.1",
+    "socket.io": "^4.7.5",
+    "socket.io-client": "^4.7.5"
+  }
+}

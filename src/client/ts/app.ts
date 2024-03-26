@@ -1,20 +1,17 @@
-console.log("Script loaded!!!");
+import { StateChangeEvent } from '../../shared/types';
+
 declare const io: any;
 
-console.log("Trying to import io:", io);
-
 document.addEventListener('DOMContentLoaded', () => {
-    const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    const socket = io.connect(`${location.protocol}//${document.domain}:${location.port}`);
+    const eventsContainer = document.getElementById('eventsContainer');
 
-    console.log("Socket connection:", socket);
-
-    const eventsContainer = document.createElement('div');
-    document.body.appendChild(eventsContainer);
-
-    socket.on('event', (event: any) => {
-        console.log('Event received:', event);
-        const eventElement = document.createElement('pre');
-        eventElement.textContent = JSON.stringify(event, null, 2);
-        eventsContainer.appendChild(eventElement);
+    socket.on('state_change', (stateChange: StateChangeEvent) => {
+        console.log('State change received:', stateChange);
+        if (eventsContainer) {
+            const eventElement = document.createElement('pre');
+            eventElement.textContent = JSON.stringify(stateChange, null, 2);
+            eventsContainer.appendChild(eventElement);
+        }
     });
 });

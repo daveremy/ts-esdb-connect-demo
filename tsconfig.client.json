@@ -3,7 +3,6 @@
     "target": "es6",
     "module": "es6",
     "outDir": "./dist/client/js",
-    "rootDir": "./src/client/ts",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
@@ -12,7 +11,7 @@
   },
   "include": [
     "src/client/ts/**/*",
-    "scr/shared/**/*"
+    "src/shared/**/*"
   ],
   "exclude": [
     "node_modules"

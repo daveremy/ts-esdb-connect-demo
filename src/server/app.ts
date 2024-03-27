@@ -27,7 +27,6 @@ app.post('/event', (req, res) => {
         eventType: metadata['es-event-type'] as EventType,
         data: req.body as EventData,
     }
-    console.log('Metadata:', metadata);
 
     const loan_id = event.data.loanId;
     let loanApplication = activeLoanApps[loan_id];
@@ -38,7 +37,6 @@ app.post('/event', (req, res) => {
 
     // Evolve the state of the loan application based on the event
     const new_state = loanApplication.evolve(event);
-    console.log('New_state:', new_state)
     const state_change: StateChangeEvent = {
         'new_state': new_state,
         'event': event,

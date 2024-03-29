@@ -1,19 +1,24 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "es6",
-    "outDir": "./dist/client/js",
+    "module": "esnext", // Adjusted for better compatibility with Webpack's dynamic import handling
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/shared/*", "src/client/*"]
+    }
+    // Removed "outDir" since Webpack handles output
   },
   "include": [
     "src/client/ts/**/*",
-    "src/shared/**/*"
+    "src/shared/ts/**/*"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "**/*.spec.ts"
   ]
 }

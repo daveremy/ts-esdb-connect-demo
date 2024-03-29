@@ -1,25 +1,27 @@
 export interface StateChangeEvent {
     new_state: LoanApplicationState;
-    event: {
-        eventType: EventType;
-        data: EventData;
-    };
+    event: LoanEvent;
 }
 
+export type LoanEvent = {
+    eventType: EventType;
+    data: EventData;
+};
+
 export type LoanApplicationState = {
-    loan_id?: string;
-    applicant_name?: string;
-    loan_purpose?: string;
-    loan_amount?: number;
+    loanId?: string;
+    applicantName?: string;
+    loanPurpose?: string;
+    loanAmount?: number;
     status?: string;
     creditCheckAgency?: string,
-    credit_score?: number;
-    credit_status?: string;
-    loan_officer?: string;
-    decision_reason?: string;
-    review_reason?: string;
-    disbursement_amount?: number;
-    disbursement_date?: string;
+    creditScore?: number;
+    creditStatus?: string;
+    loanOfficer?: string;
+    decisionReason?: string;
+    reviewReason?: string;
+    disbursementAmount?: number;
+    disbursementDate?: string;
 };
 
 interface BaseEventData {

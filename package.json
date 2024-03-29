@@ -4,14 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run watch-server\" \"npm run watch-client\" \"npm run watch-static\"",
+    "start": "concurrently \"npm run watch-server\" \"npm run watch-webpack\"",
     "watch-server": "nodemon --watch src/server -e ts --exec 'ts-node' src/server/app.ts --project tsconfig.server.json",
-    "watch-client": "tsc -w --project tsconfig.client.json",
-    "build-client": "tsc --project tsconfig.client.json",
-    "copy-static": "cp -r src/client/public/* dist/client/",
-    "watch-static": "nodemon --watch src/client/public -e html,css --exec 'npm run copy-static'",
+    "watch-webpack": "webpack serve --config webpack.client.config.js --mode development",
+    "build-client": "webpack --config webpack.client.config.js --mode development",
     "build-server": "tsc --project tsconfig.server.json",
-    "build": "npm run build-server && npm run build-client && npm run copy-static",
+    "build": "npm run build-server && npm run build-client",
     "serve": "node dist/server/app.js"
   },
   "keywords": [],
@@ -23,12 +21,19 @@
     "@types/socket.io-client": "^3.0.0",
     "chokidar-cli": "^3.0.0",
     "concurrently": "^8.2.2",
+    "copy-webpack-plugin": "^12.0.2",
+    "html-webpack-plugin": "^5.6.0",
     "nodemon": "^3.1.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.3"
+    "typescript": "^5.4.3",
+    "webpack": "^5.91.0",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.0.4"
   },
   "dependencies": {
     "@types/socket.io": "^3.0.2",
+    "change-case": "^5.4.3",
     "express": "^4.19.1",
     "socket.io": "^4.7.5",
     "socket.io-client": "^4.7.5"

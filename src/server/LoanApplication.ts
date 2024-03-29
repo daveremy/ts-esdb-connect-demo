@@ -44,10 +44,10 @@ export class LoanApplication {
     private applicationReceived(data: ApplicationReceivedData) {
         this.state = {
             ...this.state,
-            loan_id: data.loanId,
-            applicant_name: data.applicantName,
-            loan_purpose: data.loanPurpose,
-            loan_amount: data.loanAmount,
+            loanId: data.loanId,
+            applicantName: data.applicantName,
+            loanPurpose: data.loanPurpose,
+            loanAmount: data.loanAmount,
             status: "ApplicationReceived",
         };
     }
@@ -55,6 +55,7 @@ export class LoanApplication {
     private creditCheckInitiated(data: CreditCheckInitiatedData) {
         this.state = {
             ...this.state,
+            loanId: data.loanId,
             creditCheckAgency: data.creditCheckAgency,
             status: "CreditCheckInitiated",
         };
@@ -64,8 +65,9 @@ export class LoanApplication {
     private creditCheckCompleted(data: CreditCheckCompletedData) {
         this.state = {
             ...this.state,
-            credit_score: data.creditScore,
-            credit_status: data.creditStatus,
+            loanId: data.loanId,
+            creditScore: data.creditScore,
+            creditStatus: data.creditStatus,
             status: "CreditCheckCompleted",
         };
     }
@@ -73,8 +75,9 @@ export class LoanApplication {
     private applicationApproved(data: ApplicationApprovedData) {
         this.state = {
             ...this.state,
-            loan_officer: data.reviewer,
-            decision_reason: data.decisionReason,
+            loanId: data.loanId,
+            loanOfficer: data.reviewer,
+            decisionReason: data.decisionReason,
             status: "ApplicationApproved",
         };
     }
@@ -82,8 +85,9 @@ export class LoanApplication {
     private applicationDenied(data: ApplicationDeniedData) {
         this.state = {
             ...this.state,
-            loan_officer: data.reviewer,
-            decision_reason: data.decisionReason,
+            loanId: data.loanId,
+            loanOfficer: data.reviewer,
+            decisionReason: data.decisionReason,
             status: "ApplicationDenied",
         };
     }
@@ -91,7 +95,8 @@ export class LoanApplication {
     private manualReviewRequired(data: ManualReviewRequiredData) {
         this.state = {
             ...this.state,
-            review_reason: data.reviewReason,
+            loanId: data.loanId,
+            reviewReason: data.reviewReason,
             status: "ManualReviewRequired",
         };
     }
@@ -99,8 +104,9 @@ export class LoanApplication {
     private loanDisbursed(data: LoanDisbursedData) {
         this.state = {
             ...this.state,
-            disbursement_amount: data.disbursementAmount,
-            disbursement_date: data.disbursementDate,
+            loanId: data.loanId,
+            disbursementAmount: data.disbursementAmount,
+            disbursementDate: data.disbursementDate,
             status: "LoanDisbursed",
         };
     }

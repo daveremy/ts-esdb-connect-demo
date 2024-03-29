@@ -1,15 +1,20 @@
 import express from 'express';
-import { createServer, request } from 'http';
+import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
-import { Request } from 'express-serve-static-core';
-import { ParsedQs } from 'qs';
 import { LoanApplication } from './LoanApplication';
-import { StateChangeEvent, EventType, EventData } from "../shared/types";
+import { StateChangeEvent, LoanEvent, EventType, EventData } from "../shared/types";
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer);
+// Add CORS configuration to the Socket.IO server instantiation
+const io = new Server(httpServer, {
+  cors: {
+    origin: "http://localhost:8080", // Assuming your client runs on this port with webpack-dev-server
+    methods: ["GET", "POST"],
+    credentials: true
+  }
+});
 const PORT = 3000;
 
 // Middleware to parse JSON bodies
@@ -21,37 +26,36 @@ const activeLoanApps: { [loanId: string]: LoanApplication } = {};
 
 // Route to receive POST requests from the ESDB connector
 app.post('/event', (req, res) => {
-    console.log('Received event:', req.body);
     const metadata = parseMetadata(req);
-    const event = {
+    const event: LoanEvent = {
         eventType: metadata['es-event-type'] as EventType,
         data: req.body as EventData,
-    }
+    };
 
-    const loan_id = event.data.loanId;
-    let loanApplication = activeLoanApps[loan_id];
+    const loanId = event.data.loanId; // Ensure your LoanEvent and EventData interfaces reflect the actual structure
+
+    let loanApplication = activeLoanApps[loanId];
     if (!loanApplication) {
-        loanApplication = new LoanApplication(loan_id);
-        activeLoanApps[loan_id] = loanApplication;
+        loanApplication = new LoanApplication(loanId);
+        activeLoanApps[loanId] = loanApplication;
     }
 
-    // Evolve the state of the loan application based on the event
     const new_state = loanApplication.evolve(event);
     const state_change: StateChangeEvent = {
-        'new_state': new_state,
-        'event': event,
-    }
-    io.emit('state_change', state_change); // Emit the event data to all connected clients
+        new_state: new_state,
+        event: event,
+    };
+
+    io.emit('state_change', state_change);
 
     if (loanApplication.isComplete()) {
-        delete activeLoanApps[loan_id];
+        delete activeLoanApps[loanId];
     }
 
     res.status(200).send('Event received');
 });
 
-function parseMetadata(req: Request): { [key: string]: string | string[]; } {
-    // EventStoreDB metadata are in headers that start with 'es-'
+function parseMetadata(req: express.Request): { [key: string]: string | string[]; } {
     return Object.keys(req.headers)
         .filter((key) => key.startsWith('es-'))
         .reduce((acc, key) => {
@@ -65,7 +69,6 @@ function parseMetadata(req: Request): { [key: string]: string | string[]; } {
 
 // Initialize Socket.IO connection
 io.on('connection', (socket) => {
-    console.log('A user connected');
     socket.on('disconnect', () => {
         console.log('User disconnected');
     });
@@ -75,4 +78,3 @@ io.on('connection', (socket) => {
 httpServer.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-

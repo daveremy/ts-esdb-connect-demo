@@ -22,7 +22,8 @@ export class LoanCard {
         this.loanAppState = initialStateChangeEvent.new_state;
         this.events.push(initialStateChangeEvent.event);
         this.loanCardDiv = document.createElement('div');
-        this.loanCardDiv.className = 'loan-card-' + loanId;
+        this.loanCardDiv.className = `loan-card ${kebabCase(this.loanAppState.status!)}`;
+        this.loanCardDiv.id = loanId;
         this.layoutLoanCard(this.loanCardDiv);
     }
 
@@ -30,19 +31,19 @@ export class LoanCard {
         // The loan card has a header (always displayed), a loan details section (initially hidden),
         //  and an events div which lists the events leading up to the current status in latest first
         //  order (initially hidden)
-        this.appendDiv(this.loanCardDiv, 'loan-card-header');
-        this.appendDiv(this.loanCardDiv, 'loan-details', Display.None);
-        this.appendDiv(this.loanCardDiv, 'loan-events', Display.None);
-        this.layoutLoanCardHeader(this.loanCardDiv);
+        const header = this.appendDiv(this.loanCardDiv, 'loan-card-header');
+        this.layoutLoanCardHeader(header);
+        this.appendDiv(this.loanCardDiv, 'loan-details');
+        this.appendDiv(this.loanCardDiv, 'loan-events');
         // todo: loan-details section
         // todo: events-section
     }
 
-    private layoutLoanCardHeader(loanCardDiv: HTMLDivElement) {
-        this.appendField(loanCardDiv, 'ID',
+    private layoutLoanCardHeader(header: HTMLDivElement) {
+        this.appendField(header, 'ID:',
             this.formatClassName('LoanApplicationState', 'loanId'),
             this.loanAppState.loanId!);
-        this.appendField(loanCardDiv, '',
+        this.appendField(header, '',
             this.formatClassName('LoanApplicationState', 'status'),
             this.loanAppState.status!);
     }
@@ -51,20 +52,18 @@ export class LoanCard {
         return type + '-' + kebabCase(propertyName);
     }
 
-    private appendField(parent: HTMLElement, label: string, baseClassName: string, value: string, display: Display = Display.Block) {
+    private appendField(parent: HTMLElement, label: string, baseClassName: string, value: string) {
         // Fields will always be in a container (div) that has within it a label and a value. Each will have a class name derived
         //  from the type and property name
         const containerDiv = this.appendDiv(parent, baseClassName + "-container");
-        this.appendSpan(containerDiv, baseClassName + label, label);
+        this.appendSpan(containerDiv, `${baseClassName}-label`, label);
         const fieldSpan = this.appendSpan(containerDiv, baseClassName, value);
-        this.setDisplay(containerDiv, display);
         this.fields[baseClassName] = fieldSpan;
     }
 
-    private appendDiv(parent: HTMLElement, className: string, display: Display = Display.Block) {
+    private appendDiv(parent: HTMLElement, className: string) {
         const div = document.createElement('div');
         div.className = className;
-        this.setDisplay(div, display);
         parent.appendChild(div);
         return div;
     }
@@ -77,76 +76,15 @@ export class LoanCard {
         return span;
     }
 
-    private setDisplay(element: HTMLElement, display: Display) {
-        switch (display) {
-            case Display.None:
-                element.style.display = 'none';
-                break;
-            case Display.Block:
-                element.style.display = 'block';
-                break;
-        }
-    }
-
     element(): HTMLElement {
         return this.loanCardDiv;
-        // const card = document.createElement('div');
-        // card.className = 'loan-card';
-
-        // // Header
-        // const header = document.createElement('h3');
-        // card.appendChild(header);
-
-        // const loanIdSpan = document.createElement('span');
-        // loanIdSpan.className = 'loan-id';
-        // loanIdSpan.textContent = this.application.loanId;
-        // header.appendChild(loanIdSpan);
-
-        // header.appendChild(document.createTextNode(' - ')); // Separator
-
-        // const statusSpan = document.createElement('span');
-        // statusSpan.className = 'loan-status';
-        // statusSpan.textContent = this.application.status;
-        // header.appendChild(statusSpan);
-
-        // // Details
-        // this.detailsDiv.className = 'loan-details';
-        // const purposeSpan = document.createElement('span');
-        // purposeSpan.className = 'loan-purpose';
-        // purposeSpan.textContent = `Purpose: ${this.application.purpose}`;
-        // this.detailsDiv.appendChild(purposeSpan);
-
-        // this.detailsDiv.appendChild(document.createElement('br')); // Line break
-
-        // const amountSpan = document.createElement('span');
-        // amountSpan.className = 'loan-amount';
-        // amountSpan.textContent = `Amount: $${this.application.amount}`;
-        // this.detailsDiv.appendChild(amountSpan);
-
-        // card.appendChild(this.detailsDiv);
-
-        // // Events toggle
-        // const toggleEventsButton = document.createElement('button');
-        // toggleEventsButton.textContent = 'Show Events';
-        // toggleEventsButton.onclick = () => this.toggleEvents();
-        // card.appendChild(toggleEventsButton);
-
-        // // Events list
-        // this.eventsDiv.className = 'loan-events';
-        // this.application.events.forEach(event => {
-        //     const eventItem = document.createElement('div');
-        //     eventItem.textContent = `${event.eventType} at ${event.timestamp}`;
-        //     this.eventsDiv.appendChild(eventItem);
-        // });
-        // card.appendChild(this.eventsDiv);
-
-        // return card;
     }
 
     public update(stateChangeEvent: StateChangeEvent) {
         // Loop through the properties of the new state, look up them in the stored spans
         //  and update their value
         const new_state = stateChangeEvent.new_state;
+        this.loanCardDiv.className = `loan-card ${kebabCase(new_state.status!)}`;
         const event = stateChangeEvent.event;
         for (const property in new_state) {
             const className = this.formatClassName('LoanApplicationState', property);
@@ -157,10 +95,5 @@ export class LoanCard {
             }
         }
     }
-
-    // private toggleEvents() {
-    //     const isHidden = this.eventsDiv.style.display === 'none';
-    //     this.eventsDiv.style.display = isHidden ? 'block' : 'none';
-    // }
 }
 

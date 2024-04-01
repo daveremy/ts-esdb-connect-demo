@@ -36,8 +36,6 @@ export class LoanCard {
         const loanDetails = this.appendDiv(this.loanCardDiv, 'loan-details');
         this.layoutLoanDetails(loanDetails);
         this.appendDiv(this.loanCardDiv, 'loan-events');
-        // todo: loan-details section
-        // todo: events-section
     }
 
     private layoutLoanCardHeader(header: HTMLDivElement) {
@@ -68,11 +66,12 @@ export class LoanCard {
     private appendField(parent: HTMLElement, label: string, baseClassName: string, value: string) {
         // Fields will always be in a container (div) that has within it a label and a value. Each will have a class name derived
         //  from the type and property name
-        const containerDiv = this.appendDiv(parent, baseClassName + "-container");
-        if (label) this.appendSpan(containerDiv, `${baseClassName}-label`, label + ':');
+        const kebabBaseClassName = kebabCase(baseClassName);
+        const containerDiv = this.appendDiv(parent, kebabBaseClassName + "-container");
+        if (label) this.appendSpan(containerDiv, `${kebabBaseClassName}-label`, label + ':');
 
-        const fieldSpan = this.appendSpan(containerDiv, baseClassName, value);
-        this.fields[baseClassName] = fieldSpan;
+        const fieldSpan = this.appendSpan(containerDiv, kebabBaseClassName, value);
+        this.fields[kebabBaseClassName] = fieldSpan;
     }
 
     private appendDiv(parent: HTMLElement, className: string) {

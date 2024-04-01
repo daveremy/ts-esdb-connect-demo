@@ -16,18 +16,17 @@ export class LoanCard {
     private loanCardDiv: HTMLDivElement;
     // keep the field spans to easily update state when it changes
     private fields: { [elementId: string]: HTMLElement } = {};
-    private events: LoanEvent[] = [];
+    private lastEventDiv!: HTMLElement;
 
     constructor(loanId: string, initialStateChangeEvent: StateChangeEvent) {
         this.loanAppState = initialStateChangeEvent.new_state;
-        this.events.push(initialStateChangeEvent.event);
         this.loanCardDiv = document.createElement('div');
         this.loanCardDiv.className = `loan-card status-${kebabCase(this.loanAppState.status!)}`;
         this.loanCardDiv.id = loanId;
-        this.layoutLoanCard(this.loanCardDiv);
+        this.layoutLoanCard(this.loanCardDiv, initialStateChangeEvent.event);
     }
 
-    layoutLoanCard(loanCardDiv: HTMLDivElement) {
+    layoutLoanCard(loanCardDiv: HTMLDivElement, event: LoanEvent) {
         // The loan card has a header (always displayed), a loan details section (initially hidden),
         //  and an events div which lists the events leading up to the current status in latest first
         //  order (initially hidden)
@@ -35,28 +34,47 @@ export class LoanCard {
         this.layoutLoanCardHeader(header);
         const loanDetails = this.appendDiv(this.loanCardDiv, 'loan-details');
         this.layoutLoanDetails(loanDetails);
-        this.appendDiv(this.loanCardDiv, 'loan-events');
+        const loanEvents = this.appendDiv(this.loanCardDiv, 'loan-events');
+        this.addLoanEvent(loanEvents, event);
     }
-
+    
     private layoutLoanCardHeader(header: HTMLDivElement) {
         this.appendField(header, 'ID',
-            this.formatClassName('LoanApplicationState', 'loanId'),
-            this.loanAppState.loanId!);
+        this.formatClassName('LoanApplicationState', 'loanId'),
+        this.loanAppState.loanId!);
         this.appendField(header, '',
-            this.formatClassName('LoanApplicationState', 'status'),
-            this.loanAppState.status!);
+        this.formatClassName('LoanApplicationState', 'status'),
+        this.loanAppState.status!);
     }
-
+    
     layoutLoanDetails(loanDetails: HTMLDivElement) {
         for (const property in this.loanAppState) {
             // loanId and status are in the header
             if (['loanId', 'status'].includes(property)) {
                 continue;
             }
-            const className = this.formatClassName('LoanApplicationState', property);
+            const className = this.formatClassName('LoanDetails', property);
             const propertyValue = String(this.loanAppState[property as keyof LoanApplicationState]!);
-            this.appendField(loanDetails, property, property, propertyValue);
+            this.appendField(loanDetails, property, className, propertyValue);
         }
+    }
+    
+    addLoanEvent(loanEvents: HTMLElement, event: LoanEvent) {
+        const loanEventDiv = this.appendDiv(loanEvents, 'loan-event');
+        this.appendField(loanEventDiv, 'Event Type', this.formatClassName('LoanEvent', 'eventType'), event.eventType); 
+        Object.entries(event.data).forEach(([property, value]) => {
+            if (property != 'loanId') {
+                const className = this.formatClassName('LoanEvent', property);
+                if (property.includes('timestamp')) {
+                    const formattedTimestamp = new Date(value * 1000).toISOString().replace('T', ' ').substring(0, 19);
+                    this.appendField(loanEventDiv, property, className, formattedTimestamp); 
+                }
+                else {
+                    this.appendField(loanEventDiv, property, className, value);
+                }
+            }
+        });
+        this.lastEventDiv = loanEventDiv;
     }
 
     formatClassName(type: string, propertyName: string) {
@@ -97,7 +115,11 @@ export class LoanCard {
         console.log(`Updating loanapp: ${stateChangeEvent.new_state.loanId}`);
         const new_state = stateChangeEvent.new_state;
         this.updateLoanStatus(this.loanCardDiv, new_state.status!);
-        const event = stateChangeEvent.event;
+        this.updateLoanDetails(new_state);
+        this.addLoanEvent(this.lastEventDiv.parentElement!, stateChangeEvent.event);
+    }
+    
+    private updateLoanDetails(new_state: LoanApplicationState) {
         for (const property in new_state) {
             // loanId and status are already shown in the header
             if (['loanId', 'status'].includes(property)) {
@@ -122,7 +144,7 @@ export class LoanCard {
         }
         this.updateLoanCardStatusClass(loanCardDiv, newStatus);
     }
-
+    
     private updateLoanCardStatusClass(loanCardDiv: HTMLDivElement, newStatus: string) {
         const newStatusClass = `status-${kebabCase(newStatus)}`;
         // Remove existing status class

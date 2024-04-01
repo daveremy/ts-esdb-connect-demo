@@ -22,7 +22,7 @@ export class LoanCard {
         this.loanAppState = initialStateChangeEvent.new_state;
         this.events.push(initialStateChangeEvent.event);
         this.loanCardDiv = document.createElement('div');
-        this.loanCardDiv.className = `loan-card ${kebabCase(this.loanAppState.status!)}`;
+        this.loanCardDiv.className = `loan-card status-${kebabCase(this.loanAppState.status!)}`;
         this.loanCardDiv.id = loanId;
         this.layoutLoanCard(this.loanCardDiv);
     }
@@ -33,14 +33,15 @@ export class LoanCard {
         //  order (initially hidden)
         const header = this.appendDiv(this.loanCardDiv, 'loan-card-header');
         this.layoutLoanCardHeader(header);
-        this.appendDiv(this.loanCardDiv, 'loan-details');
+        const loanDetails = this.appendDiv(this.loanCardDiv, 'loan-details');
+        this.layoutLoanDetails(loanDetails);
         this.appendDiv(this.loanCardDiv, 'loan-events');
         // todo: loan-details section
         // todo: events-section
     }
 
     private layoutLoanCardHeader(header: HTMLDivElement) {
-        this.appendField(header, 'ID:',
+        this.appendField(header, 'ID',
             this.formatClassName('LoanApplicationState', 'loanId'),
             this.loanAppState.loanId!);
         this.appendField(header, '',
@@ -48,15 +49,28 @@ export class LoanCard {
             this.loanAppState.status!);
     }
 
+    layoutLoanDetails(loanDetails: HTMLDivElement) {
+        for (const property in this.loanAppState) {
+            // loanId and status are in the header
+            if (['loanId', 'status'].includes(property)) {
+                continue;
+            }
+            const className = this.formatClassName('LoanApplicationState', property);
+            const propertyValue = String(this.loanAppState[property as keyof LoanApplicationState]!);
+            this.appendField(loanDetails, property, property, propertyValue);
+        }
+    }
+
     formatClassName(type: string, propertyName: string) {
-        return type + '-' + kebabCase(propertyName);
+        return kebabCase(type) + '-' + kebabCase(propertyName);
     }
 
     private appendField(parent: HTMLElement, label: string, baseClassName: string, value: string) {
         // Fields will always be in a container (div) that has within it a label and a value. Each will have a class name derived
         //  from the type and property name
         const containerDiv = this.appendDiv(parent, baseClassName + "-container");
-        this.appendSpan(containerDiv, `${baseClassName}-label`, label);
+        if (label) this.appendSpan(containerDiv, `${baseClassName}-label`, label + ':');
+
         const fieldSpan = this.appendSpan(containerDiv, baseClassName, value);
         this.fields[baseClassName] = fieldSpan;
     }
@@ -81,12 +95,15 @@ export class LoanCard {
     }
 
     public update(stateChangeEvent: StateChangeEvent) {
-        // Loop through the properties of the new state, look up them in the stored spans
-        //  and update their value
+        console.log(`Updating loanapp: ${stateChangeEvent.new_state.loanId}`);
         const new_state = stateChangeEvent.new_state;
-        this.loanCardDiv.className = `loan-card ${kebabCase(new_state.status!)}`;
+        this.updateLoanStatus(this.loanCardDiv, new_state.status!);
         const event = stateChangeEvent.event;
         for (const property in new_state) {
+            // loanId and status are already shown in the header
+            if (['loanId', 'status'].includes(property)) {
+                break;
+            }
             const className = this.formatClassName('LoanApplicationState', property);
             const element = this.fields[property];
             const propertyValue = new_state[property as keyof LoanApplicationState];
@@ -95,5 +112,28 @@ export class LoanCard {
             }
         }
     }
-}
 
+    private updateLoanStatus(loanCardDiv: HTMLDivElement, newStatus: string) {
+        const statusSpan = loanCardDiv.querySelector('.' + this.formatClassName("LoanApplicationState", "status"));
+        if (statusSpan) {
+            statusSpan.textContent = newStatus;
+        }
+        else {
+            throw new Error("status field not found");
+        }
+        this.updateLoanCardStatusClass(loanCardDiv, newStatus);
+    }
+
+    private updateLoanCardStatusClass(loanCardDiv: HTMLDivElement, newStatus: string) {
+        const newStatusClass = `status-${kebabCase(newStatus)}`;
+        // Remove existing status class
+        Array.from(loanCardDiv.classList).forEach((className) => {
+            if (className.startsWith('status-')) {
+                loanCardDiv.classList.remove(className);
+            }
+        });
+        // Now add the new status class
+        loanCardDiv.classList.add(newStatusClass);
+    }
+
+}

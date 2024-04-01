@@ -51,7 +51,7 @@ module.exports = {
     },
     watchFiles: ['src/client/ts/**/*', 'src/client/public/**/*'],
     compress: true, // Enable gzip compression
-    open: true, // Open the default browser after the server starts
+    open: true,
     hot: true, // Enable Hot Module Replacement
     historyApiFallback: true, // Serve index.html for all routes to support SPA routing
   },

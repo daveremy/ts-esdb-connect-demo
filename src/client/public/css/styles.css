@@ -79,8 +79,6 @@ body {
     margin-bottom: 10px; /* Space between events, can be removed if using gap property */
 }
 
-
-
 .section-header {
     display: flex;
     justify-content: flex-start;
@@ -113,14 +111,20 @@ body {
 .status-application-received { border-left: 4px solid #4CAF50; }
 .status-manual-review-required { border-left: 4px solid #FFEB3B; }
 .status-application-denied { border-left: 4px solid #F44336; }
-
 @keyframes pulse {
-    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
-    100% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
 }
 
-.status-change-animation {
-    animation: pulse 1s forwards;
+.pulse {
+  animation: pulse 1s ease-out;
 }
 
 .event {

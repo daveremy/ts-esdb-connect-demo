@@ -27,10 +27,13 @@ export class LoanCard {
   constructor(loanId: string, initialStateChangeEvent: StateChangeEvent) {
     this.loanAppState = initialStateChangeEvent.new_state;
     this.loanCardDiv = document.createElement("div");
-    this.loanCardDiv.className = `loan-card status-${kebabCase(
+    this.loanCardDiv.className = `loan-card pulse status-${kebabCase(
       this.loanAppState.status!
     )}`;
     this.loanCardDiv.id = loanId;
+    this.loanCardDiv.addEventListener("animationend", () => {
+      this.loanCardDiv.classList.remove("pulse");
+    });
     this.layoutLoanCard(this.loanCardDiv, initialStateChangeEvent.event);
   }
 
@@ -216,9 +219,13 @@ export class LoanCard {
 
   public update(stateChangeEvent: StateChangeEvent) {
     const new_state = stateChangeEvent.new_state;
+    this.loanCardDiv.classList.add("pulse");
     this.updateLoanStatus(this.loanCardDiv, new_state.status!);
     this.updateLoanDetails(new_state);
     this.addLoanEvent(this.lastEventDiv.parentElement!, stateChangeEvent.event);
+    this.loanCardDiv.addEventListener("animationend", () => {
+      this.loanCardDiv.classList.remove("pulse");
+    });
   }
 
   private updateLoanDetails(new_state: LoanApplicationState) {

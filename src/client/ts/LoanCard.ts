@@ -216,6 +216,9 @@ export class LoanCard {
   element(): HTMLElement {
     return this.loanCardDiv;
   }
+  public getCurrentStatus() {
+    return this.loanAppState.status!;
+  }
 
   public update(stateChangeEvent: StateChangeEvent) {
     const new_state = stateChangeEvent.new_state;

@@ -138,3 +138,31 @@ body {
 [class*="label"] {
     margin-right: 5px; /* Space between label and value */
 }
+
+.kanban-board {
+    display: flex;
+    flex-direction: row; /* Columns side by side */
+    overflow-x: auto; /* Allows horizontal scrolling for many columns */
+    gap: 10px; /* Space between columns */
+    margin-bottom: 20px; /* Space above the completed applications section */
+}
+
+.kanban-column {
+    flex: 1;
+    min-width: 200px; /* Minimum width for each column */
+    background-color: #2c2c2c; /* Slight background for columns */
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.completed-applications {
+    background-color: #1e1e1e; /* Distinguished background */
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.completed-heading {
+    color: #fff;
+    padding: 10px 0;
+}
+

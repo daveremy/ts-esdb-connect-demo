@@ -6,7 +6,7 @@ import {
   EventData,
   LoanApplicationState,
 } from "../../shared/types";
-import { kebabCase } from "change-case";
+import { kebabCase, capitalCase } from "change-case";
 import { stat } from "fs";
 import { format } from "path";
 
@@ -180,7 +180,11 @@ export class LoanCard {
       kebabBaseClassName + "-container"
     );
     if (label)
-      this.appendSpan(containerDiv, `${kebabBaseClassName}-label`, label + ":");
+      this.appendSpan(
+        containerDiv,
+        `${kebabBaseClassName}-label`,
+        capitalCase(label) + ":"
+      );
 
     const fieldSpan = this.appendSpan(containerDiv, kebabBaseClassName, value);
     this.fields[kebabBaseClassName] = fieldSpan;

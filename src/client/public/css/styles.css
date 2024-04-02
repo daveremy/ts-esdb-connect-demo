@@ -57,11 +57,28 @@ body {
 }
 
 .loan-card-header {
-    background-color: #333;
-    /* Distinguished from card body */
+    background-color: #333; /* Distinguished from card body */
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between; /* This will space out your items */
+    align-items: center;
+}
+
+.loan-id-container, .loan-status-container {
+    display: flex;
+    align-items: center;
+}
+
+.loan-id-label, .loan-id, .loan-status {
+    margin-right: 5px; /* Adds a little space between the label and value */
+}
+
+/* Additional styling to ensure the status is right-aligned if needed */
+.loan-status-container {
+    justify-content: flex-end;
+    flex-grow: 1; /* Allows the status container to take up remaining space */
 }
 
 .loan-details,

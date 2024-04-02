@@ -2,20 +2,15 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-        /* Retained font */
-        background-color: #121212;
-        /* Dark theme background */
-        color: #fff;
-        /* Light text for dark theme */
-        line-height: 1.6;
-        /* Improved readability */
+    background-color: #121212;
+    color: #fff;
+    line-height: 1.6;
 }
 
 .menu {
     background-color: #333;
     overflow: hidden;
     font-weight: 500;
-        /* Medium weight for the menu */
 }
 
 .menu a {
@@ -26,7 +21,6 @@ body {
     padding: 14px 16px;
     text-decoration: none;
     transition: background-color 0.3s;
-        /* Smooth transition for hover effect */
 }
 
 .menu a:hover {
@@ -40,50 +34,25 @@ body {
 
 .loan-card {
     background-color: #1e1e1e;
-    /* Slightly lighter than body for contrast */
     border-radius: 8px;
     margin: 10px auto;
-    /* Centering the card */
-    padding: 10px;
+    padding: 0px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-    /* Subtle shadow for depth */
     transition: transform 0.3s ease;
-    /* For hover effect */
 }
 
 .loan-card:hover {
     transform: translateY(-5px);
-    /* Slight raise effect on hover */
 }
 
 .loan-card-header {
-    background-color: #333; /* Distinguished from card body */
+    background-color: #333;
     padding: 10px;
     border-radius: 6px;
     margin-bottom: 10px;
     display: flex;
-    justify-content: space-between; /* This will space out your items */
+    justify-content: space-between;
     align-items: center;
-}
-
-.loan-id-container, .loan-status-container {
-    display: flex;
-    align-items: center;
-}
-
-.loan-id-label, .loan-id, .loan-status {
-    margin-right: 5px; /* Adds a little space between the label and value */
-}
-
-/* Targeting elements with class names that contain 'label' */
-[class*="label"] {
-  margin-right: 5px; /* Adjust the space as needed */
-}
-
-/* Additional styling to ensure the status is right-aligned if needed */
-.loan-status-container {
-    justify-content: flex-end;
-    flex-grow: 1; /* Allows the status container to take up remaining space */
 }
 
 .loan-details,
@@ -91,71 +60,77 @@ body {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s ease;
+    margin-left: 20px; /* Indent content */
+    font-size: 0.9em; /* Smaller font for content */
 }
+
+.loan-events {
+    display: flex;
+    flex-direction: column-reverse; /* Keeps last event added at the top */
+    gap: 10px; /* Adds space between event cards */
+}
+
+.loan-event {
+    background-color: #292929; /* Slightly lighter or darker than the main card to stand out */
+    border: 1px solid #444; /* Subtle border */
+    border-radius: 5px; /* Rounded corners for a card-like appearance */
+    padding: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Optional: Adds depth with a subtle shadow */
+    margin-bottom: 10px; /* Space between events, can be removed if using gap property */
+}
+
+
 
 .section-header {
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    font-size: 0.95em; /* Smaller font for headers */
+    margin-left: 10px; /* Optional: Adjust for alignment */
 }
 
 .toggle-chevron {
     cursor: pointer;
-  margin-left: 5px;
-  transition: transform 0.3s ease;
+    margin-left: 5px;
+    transition: transform 0.3s ease;
 }
 
 .collapsible {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.5s ease-out;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease-out;
 }
 
 .collapsed {
-  max-height: 1000px; /* Adjust based on content */
+    max-height: 1000px; /* Adjust based on content */
 }
-
 
 .show {
     max-height: 1000px;
-    /* Adjust based on content */
 }
 
 /* Status-based styling */
-.status-application-received {
-    border-left: 4px solid #4CAF50;
-}
-
-/* Green */
-.status-manual-review-required {
-    border-left: 4px solid #FFEB3B;
-}
-
-/* Yellow */
-.status-application-denied {
-    border-left: 4px solid #F44336;
-}
-
-/* Red */
-/* Add other statuses as needed */
+.status-application-received { border-left: 4px solid #4CAF50; }
+.status-manual-review-required { border-left: 4px solid #FFEB3B; }
+.status-application-denied { border-left: 4px solid #F44336; }
 
 @keyframes pulse {
-    0% {
-        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
-    }
-
-    100% {
-        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
-    }
+    0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7); }
+    100% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
 }
 
 .status-change-animation {
     animation: pulse 1s forwards;
 }
+
 .event {
     background-color: #222;
-        /* Event styling retained */
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 8px;
+}
+
+/* Targeting elements with class names that contain 'label' for spacing */
+[class*="label"] {
+    margin-right: 5px; /* Space between label and value */
 }

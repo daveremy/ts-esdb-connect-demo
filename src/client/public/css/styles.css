@@ -2,18 +2,20 @@ body {
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
-    /* Updated font */
-    background-color: #121212;
-    color: #fff;
-    line-height: 1.6;
-    /* Improved readability */
+        /* Retained font */
+        background-color: #121212;
+        /* Dark theme background */
+        color: #fff;
+        /* Light text for dark theme */
+        line-height: 1.6;
+        /* Improved readability */
 }
 
 .menu {
     background-color: #333;
     overflow: hidden;
     font-weight: 500;
-    /* Use the medium weight for the menu */
+        /* Medium weight for the menu */
 }
 
 .menu a {
@@ -24,7 +26,7 @@ body {
     padding: 14px 16px;
     text-decoration: none;
     transition: background-color 0.3s;
-    /* Smooth transition for hover effect */
+        /* Smooth transition for hover effect */
 }
 
 .menu a:hover {
@@ -36,13 +38,102 @@ body {
     padding: 20px;
 }
 
+.loan-card {
+    background-color: #1e1e1e;
+    /* Slightly lighter than body for contrast */
+    border-radius: 8px;
+    margin: 10px auto;
+    /* Centering the card */
+    padding: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    /* Subtle shadow for depth */
+    transition: transform 0.3s ease;
+    /* For hover effect */
+}
+
+.loan-card:hover {
+    transform: translateY(-5px);
+    /* Slight raise effect on hover */
+}
+
+.loan-card-header {
+    background-color: #333;
+    /* Distinguished from card body */
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.loan-details,
+.loan-events {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s ease;
+}
+
+.section-header {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.toggle-chevron {
+    cursor: pointer;
+  margin-left: 5px;
+  transition: transform 0.3s ease;
+}
+
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease-out;
+}
+
+.collapsed {
+  max-height: 1000px; /* Adjust based on content */
+}
+
+
+.show {
+    max-height: 1000px;
+    /* Adjust based on content */
+}
+
+/* Status-based styling */
+.status-application-received {
+    border-left: 4px solid #4CAF50;
+}
+
+/* Green */
+.status-manual-review-required {
+    border-left: 4px solid #FFEB3B;
+}
+
+/* Yellow */
+.status-application-denied {
+    border-left: 4px solid #F44336;
+}
+
+/* Red */
+/* Add other statuses as needed */
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+
+    100% {
+        box-shadow: 0 0 0 15px rgba(255, 255, 255, 0);
+    }
+}
+
+.status-change-animation {
+    animation: pulse 1s forwards;
+}
 .event {
-    /* Assuming you're using this class for displaying events */
     background-color: #222;
+        /* Event styling retained */
     margin-bottom: 15px;
     padding: 15px;
     border-radius: 8px;
-    /* Added for visual appeal */
 }
-
-/* Adjust or add more styles as needed */

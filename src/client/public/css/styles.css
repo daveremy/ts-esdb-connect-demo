@@ -75,6 +75,11 @@ body {
     margin-right: 5px; /* Adds a little space between the label and value */
 }
 
+/* Targeting elements with class names that contain 'label' */
+[class*="label"] {
+  margin-right: 5px; /* Adjust the space as needed */
+}
+
 /* Additional styling to ensure the status is right-aligned if needed */
 .loan-status-container {
     justify-content: flex-end;

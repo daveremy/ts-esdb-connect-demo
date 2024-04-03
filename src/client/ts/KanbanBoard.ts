@@ -55,7 +55,7 @@ export class KanbanBoard {
       this.completedApplicationsElement.prepend(loanCard.element());
       setTimeout(() => {
         loanCard.element().remove();
-      }, 30000);
+      }, 90000);
     } else {
       const column = this.boardElement.querySelector(`#${loanAppState.status}`);
       if (column) {

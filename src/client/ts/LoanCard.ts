@@ -24,13 +24,13 @@ export class LoanCard {
   private fields: { [elementId: string]: HTMLElement } = {};
   private lastEventDiv!: HTMLElement;
 
-  constructor(loanId: string, initialStateChangeEvent: StateChangeEvent) {
+  constructor(initialStateChangeEvent: StateChangeEvent) {
     this.loanAppState = initialStateChangeEvent.new_state;
     this.loanCardDiv = document.createElement("div");
     this.loanCardDiv.className = `loan-card pulse status-${kebabCase(
       this.loanAppState.status!
     )}`;
-    this.loanCardDiv.id = loanId;
+    this.loanCardDiv.id = this.loanAppState.loanId!;
     this.loanCardDiv.addEventListener("animationend", () => {
       this.loanCardDiv.classList.remove("pulse");
     });

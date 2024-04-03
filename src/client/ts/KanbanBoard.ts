@@ -1,5 +1,6 @@
 import { LoanCard } from "./LoanCard"; // Adjust the import path as necessary
 import { StateChangeEvent, LoanApplicationState } from "../../shared/types";
+import { capitalCase } from "change-case";
 
 export class KanbanBoard {
   private boardElement: HTMLElement;
@@ -11,6 +12,7 @@ export class KanbanBoard {
     "ManualReviewRequired",
     "ApplicationApproved",
   ];
+  private activeLoanApps: Map<string, LoanCard> = new Map();
   private terminalStates: string[] = ["ApplicationDenied", "LoanDisbursed"];
 
   constructor(container: HTMLElement) {
@@ -35,24 +37,33 @@ export class KanbanBoard {
       const column = document.createElement("div");
       column.className = "kanban-column";
       column.id = state;
-      column.innerHTML = `<h2>${state}</h2>`;
+      column.innerHTML = `<h3>${capitalCase(state)}</h3>`;
       this.boardElement.appendChild(column);
     });
   }
 
-  public addLoanApplication(stateChangeEvent: StateChangeEvent): void {
+  public handleStateChange(stateChangeEvent: StateChangeEvent) {
     const loanAppState = stateChangeEvent.new_state;
-    const loanCard = new LoanCard(loanAppState.loanId!, stateChangeEvent);
-
-    this.placeLoanCard(loanAppState, loanCard);
+    const loanId = loanAppState.loanId!;
+    let loanCard = this.activeLoanApps.get(loanId);
+    if (loanCard) {
+      loanCard.update(stateChangeEvent);
+    } else {
+      loanCard = new LoanCard(stateChangeEvent);
+      this.activeLoanApps.set(loanId, loanCard);
+    }
+    this.moveCardToCorrectColumn(loanCard, stateChangeEvent);
   }
 
   private placeLoanCard(
     loanAppState: LoanApplicationState,
     loanCard: LoanCard
   ) {
+    const loanId = loanAppState.loanId!;
+    loanCard.element().remove();
     if (this.terminalStates.includes(loanAppState.status!)) {
       this.completedApplicationsElement.prepend(loanCard.element());
+      this.activeLoanApps.delete(loanId);
       setTimeout(() => {
         loanCard.element().remove();
       }, 90000);
@@ -66,7 +77,6 @@ export class KanbanBoard {
     }
   }
 
-  // In the KanbanBoard class
   public moveCardToCorrectColumn(
     loanCard: LoanCard,
     stateChangeEvent: StateChangeEvent

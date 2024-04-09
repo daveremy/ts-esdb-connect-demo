@@ -38,13 +38,11 @@ cd loanapp-connector-demo
 npm install
 ```
 
-4. Start the express server and webpack server (allowing real time updates):
+4. Create the connector in EventStoreDB. From the project directory:
 
 ```bash
-npm start
+./scripts/create_esdb_connector.sh
 ```
-
-This will compile the TypeScript files and start the Express server. The server will listen on port 3000.
 
 ### Usage
 

@@ -38,7 +38,13 @@ cd loanapp-connector-demo
 npm install
 ```
 
-4. Create the connector in EventStoreDB. From the project directory:
+4. For the event-generator the EventStoreDB client is needed. If you don't mind it globally you can do:
+
+```bash
+pip install esdbclient
+```
+
+5. Create the connector in EventStoreDB. From the project directory:
 
 ```bash
 ./scripts/create_esdb_connector.sh

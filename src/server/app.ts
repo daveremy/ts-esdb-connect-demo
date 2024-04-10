@@ -80,7 +80,7 @@ function getLoanApplicationFromCacheOrNew(event: LoanEvent) {
 function parseMetadata(headers: IncomingHttpHeaders): {
   [key: string]: string | string[];
 } {
-  // todo: change this to a map from an object
+  // ESDB meta data is prefixed with es-
   return Object.keys(headers)
     .filter((key) => key.startsWith("es-"))
     .reduce((acc, key) => {
@@ -92,7 +92,6 @@ function parseMetadata(headers: IncomingHttpHeaders): {
     }, {} as { [key: string]: string | string[] });
 }
 
-// Initialize Socket.IO connection
 io.on("connection", (socket) => {
   socket.on("disconnect", () => {
     console.log("User disconnected");

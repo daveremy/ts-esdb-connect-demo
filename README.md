@@ -8,6 +8,10 @@ To do this we leverage the _webhook_ capabiilty of EventStoreDB's http connector
 and how simple it is to receive events in real time from ESDB. Rather than the developer having to implement complex subscription logic on the
 client side like timeouts, restart on lost connection, etc. this is handled by the ESDB http connector.
 
+### Background info
+
+- [Connector Preview Documenation](https://developers.eventstore.com/connectors/#motivation)
+
 ## Getting Started
 
 ### Prerequisites

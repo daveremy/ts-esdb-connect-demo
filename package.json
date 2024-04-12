@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "setup": "npm install && npm run build",
     "start": "concurrently \"npm run watch-server\" \"npm run watch-webpack\"",
     "watch-server": "nodemon --watch src/server -e ts --exec 'ts-node' src/server/app.ts --project tsconfig.server.json",
     "watch-webpack": "webpack serve --config webpack.client.config.js --mode development",

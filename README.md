@@ -36,13 +36,13 @@ git clone https://github.com/your-github-username/loanapp-connector-demo.git
 cd loanapp-connector-demo
 ```
 
-3. Install dependencies:
+3. Install dependencies and do the initial build:
 
 ```bash
-npm install
+npm run setup
 ```
 
-4. For the event-generator the EventStoreDB client is needed. If you don't mind it globally you can do:
+4. For the event-generator the EventStoreDB client is needed. If you don't mind it globally you can do (another option is to set up a virtual env for this):
 
 ```bash
 pip install esdbclient
@@ -50,9 +50,19 @@ pip install esdbclient
 
 5. Create the connector in EventStoreDB. From the project directory:
 
-```bash
-./scripts/create_esdb_connector.sh
-```
+- if using docker from windows or mac:
+
+  ```bash
+  ./scripts/win_mac_docker_esdb_connector.sh
+  ```
+
+- if using docker from within linux (todo) something like adding --network="host" to docker run command (not tested)
+
+- if from a build
+
+  ```bash
+  ./scripts/create_esdb_connector.sh
+  ```
 
 ### Usage
 

@@ -11,10 +11,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // todo: make this a singleton
   const kanbanBoard = new KanbanBoard(kanbanContainer!);
 
-  const backendUrl = window.location.protocol + '//' + window.location.hostname;
+  const backendUrl = `${window.location.protocol}//${window.location.hostname}:3000`;
   const socket = io.connect(backendUrl);
 
   socket.on("state_change", (stateChange: StateChangeEvent) => {
     kanbanBoard.handleStateChange(stateChange);
   });
+
+  socket.on("connect_error", (error: Error) => {
+    console.error('Connection Error:', error);
+  });
+
 });

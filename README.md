@@ -27,13 +27,13 @@ edition. We expect it to be in the open source community edition soon.
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/your-github-username/loanapp-connector-demo.git
+git clone https://github.com/daveremy/ts-esdb-connect-demo.git
 ```
 
 2. Navigate to the project directory:
 
 ```bash
-cd loanapp-connector-demo
+cd https://github.com/daveremy/ts-esdb-connect-demo
 ```
 
 3. Install dependencies and do the initial build:
@@ -50,10 +50,10 @@ pip install esdbclient
 
 5. Create the connector in EventStoreDB. From the project directory:
 
-- if using docker from windows or mac:
+- if using docker (tested in docker desktop for mac and windows wls):
 
   ```bash
-  ./scripts/win_mac_docker_esdb_connector.sh
+  ./scripts/docker_esdb_connector.sh
   ```
 
 - if using docker from within linux (todo) something like adding --network="host" to docker run command (not tested)

@@ -1,16 +1,27 @@
 #!/bin/bash
 
+# Usage:
+#   ./create_esdb_connector.sh [eventstoredb_url] [express_app_endpoint]
+# Arguments:
+#   eventstoredb_url        - Optional. URL of the EventStoreDB instance. Defaults to 'http://localhost:2113'.
+#   express_app_endpoint    - Optional. Endpoint URL of the Express app to receive events. Defaults to 'http://localhost:3000/event'.
+#
+# Example:
+#   ./create_esdb_connector.sh "http://eventstoredb:2113" "http://nodejs:3000/event"
+
 # Default settings
 EVENTSTOREDB_URL="http://localhost:2113"
 CONNECTOR_NAME="loanapp-connector-demo"
-# Default Express app endpoint (Assuming the Express server is running on port 3000)
 EXPRESS_APP_ENDPOINT="http://localhost:3000/event"
 USERNAME="admin"
 PASSWORD="changeit"
 
-# Check if an argument was provided for the Express app endpoint
+# Check if arguments were provided for the EventStoreDB URL and Express app endpoint
 if [[ ! -z "$1" ]]; then
-  EXPRESS_APP_ENDPOINT="$1"
+  EVENTSTOREDB_URL="$1"
+fi
+if [[ ! -z "$2" ]]; then
+  EXPRESS_APP_ENDPOINT="$2"
 fi
 
 # JSON configuration for the connector
@@ -21,24 +32,40 @@ JSON_CONFIG=$(cat <<EOF
 EOF
 )
 
-# Create or update the connector
-response=$(curl -i \
-  -H "Content-Type: application/json" \
-  -u "$USERNAME:$PASSWORD" \
-  -d "$JSON_CONFIG" \
-  "$EVENTSTOREDB_URL/connectors/$CONNECTOR_NAME" \
-  -k)
+# Retry settings
+max_retries=5
+retry_count=0
+sleep_seconds=10
 
-# Output the curl response
-echo "$response"
+# Function to create or update the connector
+function create_connector {
+  echo "Attempting to create/update connector at URL: $EVENTSTOREDB_URL/connectors/$CONNECTOR_NAME"
+  echo "With configuration: $JSON_CONFIG"
+  
+  response=$(curl -i \
+    -H "Content-Type: application/json" \
+    -u "$USERNAME:$PASSWORD" \
+    -d "$JSON_CONFIG" \
+    "$EVENTSTOREDB_URL/connectors/$CONNECTOR_NAME" \
+    -k)
 
-# Summarize the action taken
-echo "Connector setup attempted for '$CONNECTOR_NAME' at '$EVENTSTOREDB_URL'."
-echo "Target endpoint for connector: '$EXPRESS_APP_ENDPOINT'."
-if [[ "$response" == *"HTTP/1.1 200 OK"* ]]; then
-  echo "Connector update was successful."
-elif [[ "$response" == *"HTTP/1.1 201 Created"* ]]; then
-  echo "Connector created successfully."
-else
-  echo "Failed to create or update the connector. Check the response above for details."
+  # Check response for success
+  echo "$response"
+  if [[ "$response" == *"HTTP/1.1 200 OK"* ]] || [[ "$response" == *"HTTP/1.1 201 Created"* ]]; then
+    echo "Connector setup successful."
+    return 0
+  else
+    echo "Failed to create or update the connector. Response:"
+    return 1
+  fi
+}
+
+# Attempt to create/update the connector with retries
+until create_connector || [ "$retry_count" -eq "$max_retries" ]; do
+  echo "Attempt $((++retry_count)) failed. Retrying in $sleep_seconds seconds..."
+  sleep $sleep_seconds
+done
+
+if [ "$retry_count" -eq "$max_retries" ]; then
+  echo "Failed to set up connector after $max_retries attempts."
 fi

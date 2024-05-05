@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  eventstoredb:
+    image: docker.eventstore.com/eventstore-ee/eventstoredb-commercial:24.2.0-jammy
+    ports:
+      - "2113:2113"
+      - "1113:1113"
+    environment:
+      - EVENTSTORE__PLUGINS__CONNECTORS__ENABLED=true
+    command:
+      [
+        "--ExtIp=0.0.0.0", # Have ESDB listen on all ports not just localhost
+        "--insecure",
+        "--run-projections=All",
+        "--enable-atom-pub-over-http",
+        "--start-standard-projections"
+      ]
+
+  nodejs:
+    build: .
+    ports:
+      - "3000:3000"
+      - "8080:8080"
+      - "2222:22"
+    volumes:
+      - .:/app
+    environment:
+      - NODE_ENV=development
+      - EVENTSTORE_HOST=eventstoredb
+
+  event_generator2:
+    build:
+      context: ./src/util
+    depends_on:
+      - nodejs
+    environment:
+      - EVENTSTORE_HOST=eventstoredb

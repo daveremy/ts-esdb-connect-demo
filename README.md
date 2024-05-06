@@ -21,6 +21,33 @@ edition. We expect it to be in the open source community edition soon.
 - Node.js (version 18.17.0 or later)
 - npm (version 7 or later, comes with Node.js)
 - python > 3.10 installed (for event generation)
+- Docker installed (for running containers)
+
+### Docker 
+Optionally you can run 3 docker containers, one for EventStoreDB, one for the NodeJS application,
+and one for the python based event generator.
+
+1. Clone the project and change into the project directory
+
+```bash
+git clone https://github.com/daveremy/ts-esdb-connect-demo.git
+cd ts-esdb-connect-demo
+```
+
+2. Ensure you are logged in to eventstore.docker.com in order to be able to pull the commercial
+version of EventStoreDB. There is a script in the scripts folder to faciliate logging in, you will need to know your username and password:
+
+```bash
+./scripts/commercial_docker_login.sh
+```
+
+3. Run `docker-compose up` from the project directory to bring up the 3 containers. This will start EventStoreDB commercial version with connectors enabled, start the nodejs application
+on http://localhost:3000, and start the python event generator to simulate loan application events.
+
+4. Navigate to `http://localhost:3000` to view the web page for the live loan application 
+dashboard.
+
+5. Afterwards, if you want to shut down and clean up run `docker-compose down`
 
 ### Installation
 
@@ -33,7 +60,7 @@ git clone https://github.com/daveremy/ts-esdb-connect-demo.git
 2. Navigate to the project directory:
 
 ```bash
-cd https://github.com/daveremy/ts-esdb-connect-demo
+cd ts-esdb-connect-demo
 ```
 
 3. Install dependencies and do the initial build:

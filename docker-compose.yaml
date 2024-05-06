@@ -28,7 +28,7 @@ services:
       - NODE_ENV=development
       - EVENTSTORE_HOST=eventstoredb
 
-  event_generator2:
+  event_generator:
     build:
       context: ./src/util
     depends_on:

@@ -23,7 +23,20 @@ edition. We expect it to be in the open source community edition soon.
 - python > 3.10 installed (for event generation)
 - Docker installed (for running containers)
 
-### Docker 
+### Run the demo with Docker Continers (one command) 
+
+1. Clone the project and change into the project directory
+
+```bash
+git clone https://github.com/daveremy/ts-esdb-connect-demo.git
+cd ts-esdb-connect-demo
+```
+
+2. Run `./run-demo.sh` - this script will prompt you for docker.eventstore.com login credentials (if youa aren't logged in already), run docker containers for EventStoreDB, the ESDB Connector Loan Application Webapp, and the python event generator. It will open a tmux session with panes to see the live log for each of these containers. It will also try to open a browser pointing to `http://localhost:3000` to see the application in action.
+
+3. To shutdown run `./shutdown-demo.sh` which will shut down all the containers and clean up the related resources.
+
+### Running Docker Compose yourself
 Optionally you can run 3 docker containers, one for EventStoreDB, one for the NodeJS application,
 and one for the python based event generator.
 

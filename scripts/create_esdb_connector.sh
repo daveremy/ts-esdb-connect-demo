@@ -1,5 +1,11 @@
 #!/bin/bash
 
+# Define color codes
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+NC='\033[0m' # No Color
+
 # Usage:
 #   ./create_esdb_connector.sh [eventstoredb_url] [express_app_endpoint]
 # Arguments:
@@ -39,8 +45,8 @@ sleep_seconds=10
 
 # Function to create or update the connector
 function create_connector {
-  echo "Attempting to create/update connector at URL: $EVENTSTOREDB_URL/connectors/$CONNECTOR_NAME"
-  echo "With configuration: $JSON_CONFIG"
+  echo -e "${YELLOW}Attempting to create/update connector at URL: $EVENTSTOREDB_URL/connectors/$CONNECTOR_NAME${NC}"
+  echo -e "${YELLOW}With configuration: ${NC}$JSON_CONFIG"
   
   response=$(curl -i \
     -H "Content-Type: application/json" \
@@ -52,20 +58,20 @@ function create_connector {
   # Check response for success
   echo "$response"
   if [[ "$response" == *"HTTP/1.1 200 OK"* ]] || [[ "$response" == *"HTTP/1.1 201 Created"* ]]; then
-    echo "Connector setup successful."
+    echo -e "${GREEN}Connector setup successful.${NC}"
     return 0
   else
-    echo "Failed to create or update the connector. Response:"
+    echo -e "${RED}Failed to create or update the connector. Response:${NC}"
     return 1
   fi
 }
 
 # Attempt to create/update the connector with retries
 until create_connector || [ "$retry_count" -eq "$max_retries" ]; do
-  echo "Attempt $((++retry_count)) failed. Retrying in $sleep_seconds seconds..."
+  echo -e "${RED}Attempt $((++retry_count)) failed. Retrying in $sleep_seconds seconds...${NC}"
   sleep $sleep_seconds
 done
 
 if [ "$retry_count" -eq "$max_retries" ]; then
-  echo "Failed to set up connector after $max_retries attempts."
+  echo -e "${RED}Failed to set up connector after $max_retries attempts.${NC}"
 fi

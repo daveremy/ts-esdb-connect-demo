@@ -24,6 +24,7 @@ services:
       - "2222:22"
     volumes:
       - .:/app
+      - /app/node_modules
     environment:
       - NODE_ENV=development
       - EVENTSTORE_HOST=eventstoredb

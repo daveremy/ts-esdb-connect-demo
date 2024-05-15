@@ -19,11 +19,11 @@ echo -e "\n${YELLOW}Waiting a moment for containers to warm up (vrooom)...${NC}\
 sleep 5
 
 # After a reasonable delay to ensure the web server is up, launch the browser
-echo -e "${YELLOW}Attempting to launch the browser...${NC}\n"
+echo -e "${YELLOW}Attempting to launch the browser (you may need to refresh the browser)...${NC}\n"
 if command -v xdg-open > /dev/null; then
-    xdg-open http://localhost:3000
+    xdg-open http://localhost:8080
 elif command -v open > /dev/null; then
-    open http://localhost:3000
+    open http://localhost:8080
 else
     echo -e "${RED}Unable to open browser automatically (are you on WSL?). No problem...${NC}"
     echo -e "${RED}Open http://localhost:3000 in your browser.${NC}\n"

@@ -18,7 +18,7 @@ NC='\033[0m' # No Color
 # Default settings
 EVENTSTOREDB_URL="http://localhost:2113"
 CONNECTOR_NAME="loanapp-connector-demo"
-EXPRESS_APP_ENDPOINT="http://localhost:3000/event"
+EXPRESS_APP_ENDPOINT="http://localhost:3000/event/loanApplication"
 USERNAME="admin"
 PASSWORD="changeit"
 
